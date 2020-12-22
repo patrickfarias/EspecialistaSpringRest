@@ -11,7 +11,7 @@ insert into cidade (id, nome, estado_id) values (2, 'Araguari', 1);
 
 insert into forma_pagamento (id, descricao) values (1, 'Dinheiro');
 
-insert into permissao (id, descricao, nome) values (1, 'Supervisor', 'Acessao todo o sistema' );
+insert into permissao (id, nome, descricao) values (1, 'Supervisor', 'Acessao todo o sistema' );
 
 
 insert into restaurante (nome, taxa_frete, cozinha_id, forma_pagamento_id) values ('Thai Gourmet', 10, 1, 1);
