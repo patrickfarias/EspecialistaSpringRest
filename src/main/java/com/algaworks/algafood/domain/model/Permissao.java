@@ -1,15 +1,14 @@
 package com.algaworks.algafood.domain.model;
 
-import javax.persistence.*;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Cozinha {
-
+public class Permissao {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,4 +17,6 @@ public class Cozinha {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
+    private String descricao;
 }
