@@ -62,6 +62,7 @@ public class CozinhaController {
 
            Cozinha cozinha = cozinhaRepository.buscar(id);
 
+
            if (cozinha != null) {
                cozinhaRepository.remover(cozinha);
 
