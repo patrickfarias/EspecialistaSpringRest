@@ -65,7 +65,6 @@ public class CozinhaController {
 			cozinhaAtual = cadastroCozinha.salvar(cozinhaAtual);
 			return ResponseEntity.ok(cozinhaAtual);
 		}
-
 		
 		return ResponseEntity.notFound().build();
 	}
