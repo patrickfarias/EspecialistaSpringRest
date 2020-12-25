@@ -2,9 +2,13 @@ package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.model.Cozinha;
+import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.model.Restaurante;
+import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.repository.CozinhaRepository;
+import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,29 +16,29 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CadastroRestauranteService {
+public class CadastroCidadeService {
 
 	@Autowired
-	private RestauranteRepository restauranteRepository;
+	private EstadoRepository estadoRepository;
 
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
+	private CidadeRepository cidadeRepository;
 	
-	public Restaurante salvar(Restaurante restaurante) {
-		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
+	public Cidade salvar(Cidade cidade) {
+		Long estadoId = cidade.getEstado().getId();
+		Estado estado = estadoRepository.buscar(estadoId);
 
-		if (cozinha == null){
-			throw new EntidadeNaoEncontradaException(String.format("Nao existe cadastro de cozinha com o codigo %d", cozinhaId));
+		if (estado == null){
+			throw new EntidadeNaoEncontradaException(String.format("Nao existe cadastro de estado com o codigo %d", estadoId));
 		}
-		restaurante.setCozinha(cozinha);
+		cidade.setEstado(estado);
 
-		return restauranteRepository.salvar(restaurante);
+		return cidadeRepository.salvar(cidade);
 	}
 	
-//	public void excluir(Long cozinhaId) {
+//	public void excluir(Long cidadeId) {
 //		try {
-//			cozinhaRepository.remover(cozinhaId);
+//			cidadeRepository.remover(cidadeId);
 //
 //		} catch (EmptyResultDataAccessException e) {
 //			throw new EntidadeNaoEncontradaException(

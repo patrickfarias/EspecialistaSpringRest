@@ -8,13 +8,17 @@ import com.algaworks.algafood.domain.repository.CozinhaRepository;
 import com.algaworks.algafood.domain.repository.RestauranteRepository;
 import com.algaworks.algafood.domain.service.CadastroCozinhaService;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -83,18 +87,57 @@ public class RestauranteController {
 
 	}
 	
-	@DeleteMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
-		try {
-			cadastroCozinha.excluir(cozinhaId);	
-			return ResponseEntity.noContent().build();
-			
-		} catch (EntidadeNaoEncontradaException e) {
+//	@DeleteMapping("/{cozinhaId}")
+//	public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
+//		try {
+//			cadastroCozinha.excluir(cozinhaId);
+//			return ResponseEntity.noContent().build();
+//
+//		} catch (EntidadeNaoEncontradaException e) {
+//			return ResponseEntity.notFound().build();
+//
+//		} catch (EntidadeEmUsoException e) {
+//			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+//		}
+//	}
+
+	@PatchMapping("/{restauranteId}")
+
+	public ResponseEntity<?> atualizarParcial (@PathVariable Long restauranteId,
+											   @RequestBody Map<String, Object> campos){
+
+
+		Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+
+		if (restauranteAtual == null) {
+
 			return ResponseEntity.notFound().build();
-			
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+
 		}
+
+		merge(campos, restauranteAtual);
+
+		return atualizar(restauranteId, restauranteAtual);
+		}
+
+		private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino){
+
+			ObjectMapper objectMapper = new ObjectMapper();
+			Restaurante restauranteorigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
+
+			dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+
+					Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+					field.setAccessible(true);
+
+					Object novoValor = ReflectionUtils.getField(field, restauranteorigem);
+
+					//System.out.println(nomePropriedade + " = " + valorPropriedade);
+
+					ReflectionUtils.setField(field, restauranteDestino, novoValor);
+				}
+
+				);
 	}
 	
 }
