@@ -27,10 +27,10 @@ public class CidadeController {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
-
+	
 	@Autowired
 	private CadastroCidadeService cadastroCidade;
-
+	
 	@GetMapping
 	public List<Cidade> listar() {
 		return cidadeRepository.listar();
@@ -46,12 +46,12 @@ public class CidadeController {
 		
 		return ResponseEntity.notFound().build();
 	}
-
+	
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
 		try {
 			cidade = cadastroCidade.salvar(cidade);
-
+			
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(cidade);
 		} catch (EntidadeNaoEncontradaException e) {
@@ -65,31 +65,31 @@ public class CidadeController {
 			@RequestBody Cidade cidade) {
 		try {
 			Cidade cidadeAtual = cidadeRepository.buscar(cidadeId);
-
+			
 			if (cidadeAtual != null) {
 				BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
+				
 				cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 				return ResponseEntity.ok(cidadeAtual);
 			}
-
+			
 			return ResponseEntity.notFound().build();
-
+		
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest()
 					.body(e.getMessage());
 		}
 	}
-
+	
 	@DeleteMapping("/{cidadeId}")
 	public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId) {
 		try {
-			cadastroCidade.excluir(cidadeId);
+			cadastroCidade.excluir(cidadeId);	
 			return ResponseEntity.noContent().build();
-
+			
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
-
+			
 		} catch (EntidadeEmUsoException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}

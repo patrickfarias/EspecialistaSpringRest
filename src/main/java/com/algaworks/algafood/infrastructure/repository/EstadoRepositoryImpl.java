@@ -39,11 +39,11 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 	@Override
 	public void remover(Long id) {
 		Estado estado = buscar(id);
-
+		
 		if (estado == null) {
 			throw new EmptyResultDataAccessException(1);
 		}
-
+		
 		manager.remove(estado);
 	}
 
