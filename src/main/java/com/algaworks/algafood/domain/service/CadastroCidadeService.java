@@ -1,5 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
+import com.algaworks.algafood.domain.model.Cozinha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +13,8 @@ import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 
+import java.util.Optional;
+
 @Service
 public class CadastroCidadeService {
 
@@ -23,21 +26,37 @@ public class CadastroCidadeService {
 	
 	public Cidade salvar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = estadoRepository.buscar(estadoId);
-		
-		if (estado == null) {
-			throw new EntidadeNaoEncontradaException(
-				String.format("Não existe cadastro de estado com código %d", estadoId));
-		}
+		Estado estado = estadoRepository.findById(estadoId)
+				.orElseThrow(()-> new EntidadeNaoEncontradaException(
+						String.format("Não existe cadastro de estado com código %d", estadoId)));
+
+
+
+
+
+
+//		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
+//				.orElseThrow(()-> new EntidadeNaoEncontradaException(
+//						String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
+//
+//
+//		restaurante.setCozinha(cozinha);
+//
+//
+//
+//		if (estado.isPresent()) {
+//			throw new EntidadeNaoEncontradaException(
+//				String.format("Não existe cadastro de estado com código %d", estadoId));
+//		}
 		
 		cidade.setEstado(estado);
 		
-		return cidadeRepository.salvar(cidade);
+		return cidadeRepository.save(cidade);
 	}
 	
 	public void excluir(Long cidadeId) {
 		try {
-			cidadeRepository.remover(cidadeId);
+			cidadeRepository.deleteById(cidadeId);
 			
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
