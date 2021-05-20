@@ -31,24 +31,6 @@ public class CadastroCidadeService {
 						String.format("Não existe cadastro de estado com código %d", estadoId)));
 
 
-
-
-
-
-//		Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-//				.orElseThrow(()-> new EntidadeNaoEncontradaException(
-//						String.format("Não existe cadastro de cozinha com código %d", cozinhaId)));
-//
-//
-//		restaurante.setCozinha(cozinha);
-//
-//
-//
-//		if (estado.isPresent()) {
-//			throw new EntidadeNaoEncontradaException(
-//				String.format("Não existe cadastro de estado com código %d", estadoId));
-//		}
-		
 		cidade.setEstado(estado);
 		
 		return cidadeRepository.save(cidade);
